@@ -82,6 +82,9 @@ class Application:
         self.textarea.tag_add('tager', '%d.0'%nb_col, 'end')
         self.textarea.tag_config(justify='right', tag=tager)
 
-# Application(Tk(), 0)
+
+
+if "__main__"=="__name__":
+    Application(Tk(), 0)
 
 

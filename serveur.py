@@ -19,7 +19,7 @@ print 'en ecoute'
 nbJoueur = int(raw_input('nombre de Joueur ? '))
 
 
-
+verrou=Lock()
 
 
 #####################################################################
@@ -46,7 +46,7 @@ def commence(newsocket):
 	newsocket.send('commence')
 
 	while True:
-		data = newsocket.recv(255)
+		data = newsocket.recv(2055)
 		print data
 
 		if data == 'fin':
@@ -54,6 +54,15 @@ def commence(newsocket):
 			Fin_boucle_client = False
 			print 'fin de la connexion client TCP'
 			break
+
+		if data[:2] == 'tb':
+			verrou.acquire()
+			for i in newsoc:
+				if i != newsocket:
+					i.send(data[3:])
+			verrou.release()
+
+
 
 ####################################################################
 
@@ -101,4 +110,5 @@ except error:
 finally:
 	finir(newsoc, threads, socketPrincipal)
 	print 'fin de connexion'
+	sys.exit(1)
 #################################################################

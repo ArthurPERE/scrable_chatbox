@@ -53,7 +53,7 @@ try:
 	FinBoucle = False
 
 	while not FinBoucle:
-		data = s.recv(255)
+		data = s.recv(2055)
 		print data
 
 		if len(data) != 0:
@@ -62,42 +62,44 @@ try:
 
 
 	t = threading.Thread(target=recevoir)
-	t_chat = threading.Thread(target=chat)
+	# t_chat = threading.Thread(target=chat)
 	
 	
 
 	t.start()
-	t_chat.start()
+	# t_chat.start()
 
 	while Continue_boucle:
 		data = raw_input('>> ')
-		s.send(data)
+		s.send('tb ' + data)
 
 		if data == 'fin':
 			break
 
 	t.join()
-	t_chat()
+	# t_chat.join()
 
 
 
 ###########################################################
 except KeyboardInterrupt:
 	s.send('fin')
-	t_chat.join()
+	# t_chat.join()
 	t.join()
 	print 'Vous avez pressez ctrl+C'
 	s.shutdown(1)
 	s.close()
+	sys.exit(1)
 
 
 except error:
 	s.close()
-	t_chat.join()
+	# t_chat.join()
 	t.join()
 	print 'error'
 	s.shutdown(1)
 	s.close()
+	sys.exit(1)
 
 ###########################################################
 finally:
