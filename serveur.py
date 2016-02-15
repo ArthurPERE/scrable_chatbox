@@ -4,7 +4,7 @@ from time import time, ctime
 import sys
 import signal
 #from Serveur_Scrabble import *
-from threading import *
+import threading as th
 
 host = gethostname()
 port = 8000
@@ -19,23 +19,26 @@ print 'en ecoute'
 nbJoueur = int(raw_input('nombre de Joueur ? '))
 
 
-verrou=Lock()
+verrou=th.Lock()
 
 
 #####################################################################
 # pour la fin de la boucle
-def finir(listSock, listTread, socketPrincipal):
+def finir(listSock, listThread, socketPrincipal):
+	print 'commencer l\'apocalypse'
 	for i in listSock:
 		i.send('fin')
 		i.close()
-
-	for i in listTread:
-		i.join()
-
+		i.shutdown(1)
+	print 'fin des client'
+	for i in th.enumerate():
+		if i != th.currentThread():
+			i.join()
+	print 'fin des thread'
 	socketPrincipal.shutdown(1)
 	socketPrincipal.close()
+	print 'fin de la socket principal'
 ####################################################################
-
 
 
 
@@ -53,7 +56,7 @@ def commence(newsocket):
 			global Fin_boucle_client
 			Fin_boucle_client = False
 			print 'fin de la connexion client TCP'
-			break
+			newsoc.remove(newsocket)
 
 		if data[:2] == 'tb':
 			verrou.acquire()
@@ -78,7 +81,7 @@ try:
 		print "connected from", addr
 		news.send('connected\n')
 
-		t = Thread(target=commence, args=(news,))
+		t = th.Thread(target=commence, args=(news,))
 		threads.append(t)
 		newsoc.append(news)
 		t.start()
@@ -102,10 +105,16 @@ try:
 
 
 except KeyboardInterrupt:
+	for i in newsoc:
+		i.send('fin serveur')
 	print 'vous avez pressez ctrl+C'
+	finir(newsoc, threads, socketPrincipal)
+	sys.exit(1)
 	
 except error:
 	print 'error'
+	finir(newsoc, threads, socketPrincipal)
+	sys.exit(1)
 
 finally:
 	finir(newsoc, threads, socketPrincipal)

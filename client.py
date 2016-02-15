@@ -64,8 +64,6 @@ try:
 	t = threading.Thread(target=recevoir)
 	# t_chat = threading.Thread(target=chat)
 	
-	
-
 	t.start()
 	# t_chat.start()
 
