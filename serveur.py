@@ -31,6 +31,7 @@ def finir(listSock, listThread, socketPrincipal):
 		i.close()
 		i.shutdown(1)
 	print 'fin des client'
+	print th.enumerate()
 	for i in th.enumerate():
 		if i != th.currentThread():
 			i.join()
@@ -47,13 +48,13 @@ Fin_boucle_client = True
 ####################################################################
 def commence(newsocket):
 	newsocket.send('commence')
+	global Fin_boucle_client
 
-	while True:
+	while Fin_boucle_client:
 		data = newsocket.recv(2055)
 		print data
 
 		if data == 'fin':
-			global Fin_boucle_client
 			Fin_boucle_client = False
 			print 'fin de la connexion client TCP'
 			newsoc.remove(newsocket)
@@ -108,13 +109,9 @@ except KeyboardInterrupt:
 	for i in newsoc:
 		i.send('fin serveur')
 	print 'vous avez pressez ctrl+C'
-	finir(newsoc, threads, socketPrincipal)
-	sys.exit(1)
 	
 except error:
 	print 'error'
-	finir(newsoc, threads, socketPrincipal)
-	sys.exit(1)
 
 finally:
 	finir(newsoc, threads, socketPrincipal)
