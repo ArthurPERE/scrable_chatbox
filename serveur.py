@@ -64,9 +64,11 @@ def commence(newsocket):
 
 		# si un client c'est arreter
 		if data == 'fin':
+			verrou.acquire()
 			continue_boucle_client = False
 			print 'fin de la connexion client TCP'
 			newsoc.remove(newsocket)
+			verrou.release()
 
 
 		# distribuer les informations aux autres
