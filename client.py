@@ -83,28 +83,22 @@ try:
 except KeyboardInterrupt:
 	s.send('fin')
 	# t_chat.join()
-	t.join()
 	print 'Vous avez pressez ctrl+C'
-	s.shutdown(1)
-	s.close()
-	sys.exit(1)
 
 
 except error:
-	s.close()
 	# t_chat.join()
-	t.join()
 	print 'error'
-	s.shutdown(1)
-	s.close()
-	sys.exit(1)
 
 ###########################################################
 finally:
 	# fermeture de la connexion
 	print "finally ..."
+	Continue_boucle=False
+	t.join()
 	s.shutdown(1)
 	s.close()
+	sys.exit(1)
 
 print "fin du client TCP"
 

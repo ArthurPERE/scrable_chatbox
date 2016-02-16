@@ -25,13 +25,14 @@ verrou=th.Lock()
 #####################################################################
 # pour la fin de la boucle
 def finir(listSock, listThread, socketPrincipal):
+	global Fin_boucle_client
 	print 'commencer l\'apocalypse'
 	for i in listSock:
 		i.send('fin')
 		i.close()
 		i.shutdown(1)
 	print 'fin des client'
-	print th.enumerate()
+	Fin_boucle_client = False
 	for i in th.enumerate():
 		if i != th.currentThread():
 			i.join()
