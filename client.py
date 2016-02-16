@@ -24,8 +24,9 @@ def recevoir():
 		print data_recv, 'client'
 	
 
-		if data_recv == 'fin':
+		if 'fin' in data_recv:
 			Continue_boucle = False
+			s.send('')
 
 		if data_recv[:3] == 'tb ':
 			appli.retrive(data_recv[2:])
@@ -74,20 +75,16 @@ try:
 		if data == 'fin':
 			break
 
-	t.join()
-	# t_chat.join()
 
 
 
 ###########################################################
 except KeyboardInterrupt:
 	s.send('fin')
-	# t_chat.join()
 	print 'Vous avez pressez ctrl+C'
 
 
 except error:
-	# t_chat.join()
 	print 'error'
 
 ###########################################################
@@ -96,6 +93,7 @@ finally:
 	print "finally ..."
 	Continue_boucle=False
 	t.join()
+	# t_chat.join()
 	s.shutdown(1)
 	s.close()
 	sys.exit(1)
