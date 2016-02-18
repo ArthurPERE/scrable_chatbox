@@ -76,7 +76,7 @@ def commence(newsocket):
 			verrou.acquire()
 			for i in newsoc:
 				if i != newsocket:
-					i.send(data[3:])
+					i.send(data)
 			verrou.release()
 
 

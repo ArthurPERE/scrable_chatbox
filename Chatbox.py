@@ -2,6 +2,10 @@ from Tkinter import *
 from socket import *
 import threading
 
+
+text = ''
+
+
 class Application:
 
     def hello(self):
@@ -11,36 +15,38 @@ class Application:
         self.sock = sock
         self.nb_col = 1
 
-        form.resizable(0,0)
-        form.minsize(200, 200)
-        form.title('Top Level')
+        self.frame = form
+
+        self.frame.resizable(0,0)
+        self.frame.minsize(200, 200)
+        self.frame.title('Top Level')
 
         # Global Padding pady and padx
         pad_x = 5
         pad_y = 5
 
         # create a toplevel menu
-        menubar = Menu(form)
+        menubar = Menu(self.frame)
         #command= parameter missing.
-        menubar.add_command(label="quit", command=form.quit)
+        menubar.add_command(label="quit", command=self.frame.quit)
         #command= parameter missing.
         menubar.add_command(label="Menu2")
         #command= parameter missing.
         menubar.add_command(label="Menu3")
 
         # display the menu
-        form.config(menu=menubar)
+        self.frame.config(menu=menubar)
 
         # Create controls
 
-        label1 = Label(form, text="Label1")
+        label1 = Label(self.frame, text="Label1")
         self.txt = StringVar()
-        textbox1 = Entry(form, textvariable=self.txt)
+        textbox1 = Entry(self.frame, textvariable=self.txt)
         #command= parameter missing.
-        button1 = Button(form, text='add text', command=self.addchat)
+        button1 = Button(self.frame, text='add text', command=self.addchat)
 
-        scrollbar1 = Scrollbar(form)
-        textarea1 = Text(form, width=20, height=10)
+        scrollbar1 = Scrollbar(self.frame)
+        textarea1 = Text(self.frame, width=20, height=10)
 
         textarea1.config(yscrollcommand=scrollbar1.set)
         scrollbar1.config(command=textarea1.yview)
@@ -51,11 +57,9 @@ class Application:
         button1.grid(row=1, column=2, padx=pad_x, pady=pad_y, sticky=W)
         self.textbox = textbox1
     	self.textarea = textarea1 # see above
-    	form.bind("<Return>", lambda x: self.addchat())
+    	self.frame.bind("<Return>", lambda x: self.addchat())
         # this is the magic that makes your enter key do something
 
-
-        form.mainloop()
 
 
     def addchat(self):
@@ -73,14 +77,32 @@ class Application:
 
 
 
-    def retrive(self, txt):
+    def retrive(self, text):
+        if text[:2] == 'tb':
 
-        self.textarea.insert(END, "\n"+txt[2:])
-        self.nb_col += 1
+            print txt, 'chat'
 
-        # for justify the receinved text at right
-        self.textarea.tag_add('tager', '%d.0'%nb_col, 'end')
-        self.textarea.tag_config(justify='right', tag=tager)
+            self.textarea.insert(END, "\n"+text[3:])
+            self.nb_col += 1
+
+            # for justify the receinved text at right
+            # self.textarea.tag_add('tager', '%d.0'%self.nb_col, 'end')
+            # self.textarea.tag_config('tager' ,justify='right')
+
+
+
+    def begin(self):
+        # self.frame.after(0, self.retrive)
+        self.frame.mainloop()
+
+
+    def quit(self):
+        self.frame.destroy()
+
+    def update(self, txt):
+        global text
+        text = txt
+
 
 
 
