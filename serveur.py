@@ -54,7 +54,7 @@ def finir(listSock, listThread, socketPrincipal):
 continue_boucle_client = True
 ####################################################################
 def commence(newsocket):
-	newsocket.send('commence serveur')
+	# newsocket.send('commence serveur')
 	global continue_boucle_client
 
 	while continue_boucle_client:
@@ -93,13 +93,16 @@ try:
 	while len(newsoc)<nbJoueur:
 		news, addr = socketPrincipal.accept()
 		print "connected from", addr
-		news.send('connected\n')
 
 		# liste des thread et des sockets
 		t = th.Thread(target=commence, args=(news,))
 		threads.append(t)
 		newsoc.append(news)
+
+		news.send('joueur %d'%len(newsoc))
+
 		t.start()
+
 
 
 
